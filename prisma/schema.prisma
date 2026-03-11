@@ -29,33 +29,41 @@ model Category {
 }
 
 model Product {
+  id                  String  @id @default(cuid())
+  name                String
+  description         String?
+  price               Float
+  categoryId          String
+  active              Boolean @default(true)
+  costPerBatch        Float   @default(0) // custo por batelada (10 paletas)
+  costPerUnit         Float   @default(0) // custo por paleta
+  maxProduction       Int     @default(0) // producao maxima com estoque atual
+  limitingIngredient  String? // ingrediente limitante
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  category    Category     @relation(fields: [categoryId], references: [id])
+  stock       Stock?
+  orderItems  OrderItem[]
+  recipeItems RecipeItem[]
+}
+
+model Supply {
   id          String  @id @default(cuid())
   name        String
-  description String?
-  price       Float
-  categoryId  String
+  unit        String  // kg, litros, unidades, gramas
+  quantity    Float   @default(0)
+  minStock    Float   @default(0)
+  costPerUnit Float   @default(0) // custo por unidade (R$/kg, R$/un etc)
+  totalCost   Float   @default(0) // custo total investido
   active      Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  category   Category    @relation(fields: [categoryId], references: [id])
-  stock      Stock?
-  orderItems OrderItem[]
-}
-
-model Supply {
-  id        String  @id @default(cuid())
-  name      String
-  unit      String  // kg, litros, unidades
-  quantity  Float   @default(0)
-  minStock  Float   @default(0)
-  active    Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  movements SupplyMovement[]
+  movements   SupplyMovement[]
+  recipeItems RecipeItem[]
 }
 
 model SupplyMovement {
@@ -103,6 +111,18 @@ model Order {
 
   user  User        @relation(fields: [userId], references: [id])
   items OrderItem[]
+}
+
+model RecipeItem {
+  id             String @id @default(cuid())
+  productId      String
+  supplyId       String
+  quantityPerBatch Float // quantidade do insumo por batelada (10 paletas)
+
+  product Product @relation(fields: [productId], references: [id])
+  supply  Supply  @relation(fields: [supplyId], references: [id])
+
+  @@unique([productId, supplyId])
 }
 
 model OrderItem {

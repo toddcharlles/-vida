@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatCurrency } from "@/lib/utils";
 
 interface Supply {
   id: string;
@@ -8,12 +9,14 @@ interface Supply {
   unit: string;
   quantity: number;
   minStock: number;
+  costPerUnit: number;
+  totalCost: number;
 }
 
 export default function SuppliesPage() {
   const [supplies, setSupplies] = useState<Supply[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: "", unit: "kg", quantity: "0", minStock: "0" });
+  const [form, setForm] = useState({ name: "", unit: "kg", quantity: "0", minStock: "0", costPerUnit: "0", totalCost: "0" });
   const [movForm, setMovForm] = useState<{ supplyId: string; type: string; quantity: string; notes: string } | null>(null);
 
   useEffect(() => { loadSupplies(); }, []);
@@ -31,7 +34,7 @@ export default function SuppliesPage() {
       body: JSON.stringify(form),
     });
     setShowForm(false);
-    setForm({ name: "", unit: "kg", quantity: "0", minStock: "0" });
+    setForm({ name: "", unit: "kg", quantity: "0", minStock: "0", costPerUnit: "0", totalCost: "0" });
     loadSupplies();
   }
 
@@ -105,6 +108,26 @@ export default function SuppliesPage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500 outline-none"
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Custo/Unidade (R$)</label>
+              <input
+                type="number"
+                step="0.01"
+                value={form.costPerUnit}
+                onChange={(e) => setForm({ ...form, costPerUnit: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500 outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Custo Total (R$)</label>
+              <input
+                type="number"
+                step="0.01"
+                value={form.totalCost}
+                onChange={(e) => setForm({ ...form, totalCost: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500 outline-none"
+              />
+            </div>
             <div className="md:col-span-4 flex gap-2">
               <button type="submit" className="bg-violet-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-violet-700 transition">
                 Criar
@@ -163,6 +186,15 @@ export default function SuppliesPage() {
         </div>
       )}
 
+      {supplies.length > 0 && (
+        <div className="bg-violet-50 rounded-xl border border-violet-200 p-5 mb-6">
+          <h2 className="font-semibold text-violet-800 mb-2">Investimento Total em Insumos</h2>
+          <p className="text-2xl font-bold text-violet-700">
+            {formatCurrency(supplies.reduce((sum, s) => sum + s.totalCost, 0))}
+          </p>
+        </div>
+      )}
+
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-50 border-b border-gray-200">
@@ -171,6 +203,8 @@ export default function SuppliesPage() {
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Unidade</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Quantidade</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Mín.</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Custo/Un</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Custo Total</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
               <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">Ação</th>
             </tr>
@@ -184,6 +218,8 @@ export default function SuppliesPage() {
                   <td className="px-4 py-3 text-sm text-gray-500">{s.unit}</td>
                   <td className="px-4 py-3 text-sm font-bold text-gray-700">{s.quantity}</td>
                   <td className="px-4 py-3 text-sm text-gray-500">{s.minStock}</td>
+                  <td className="px-4 py-3 text-sm text-gray-500">{formatCurrency(s.costPerUnit)}</td>
+                  <td className="px-4 py-3 text-sm font-medium text-gray-700">{formatCurrency(s.totalCost)}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       low ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"
@@ -204,7 +240,7 @@ export default function SuppliesPage() {
             })}
             {supplies.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-gray-500 text-sm">
+                <td colSpan={8} className="px-4 py-8 text-center text-gray-500 text-sm">
                   Nenhum insumo cadastrado
                 </td>
               </tr>

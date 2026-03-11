@@ -33,6 +33,8 @@ export async function POST(request: NextRequest) {
         unit: data.unit,
         quantity: parseFloat(data.quantity) || 0,
         minStock: parseFloat(data.minStock) || 0,
+        costPerUnit: parseFloat(data.costPerUnit) || 0,
+        totalCost: parseFloat(data.totalCost) || 0,
       },
     });
 

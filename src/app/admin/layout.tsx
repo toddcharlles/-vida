@@ -9,6 +9,7 @@ const adminNav = [
   { href: "/admin/produtos", label: "Produtos", icon: "🍦" },
   { href: "/admin/estoque", label: "Estoque Produtos", icon: "📦" },
   { href: "/admin/insumos", label: "Insumos", icon: "🧪" },
+  { href: "/admin/relatorio", label: "Relatório Produção", icon: "📈" },
   { href: "/admin/pedidos", label: "Pedidos", icon: "📋" },
   { href: "/admin/vendedores", label: "Vendedores", icon: "👥" },
 ];
