@@ -14,6 +14,9 @@ const adminNav = [
   { href: "/admin/vendedores", label: "Vendedores", icon: "👥" },
   { href: "/admin/lojas", label: "Lojas", icon: "📍" },
   { href: "/admin/comissoes", label: "Comissões", icon: "💰" },
+  { href: "/admin/liga", label: "Liga das Paletas", icon: "🃏" },
+  { href: "/admin/liga/cartas", label: "Cartas", icon: "⚔️" },
+  { href: "/admin/liga/palitos", label: "Palitos Dourados", icon: "✨" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

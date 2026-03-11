@@ -12,6 +12,9 @@ const clienteNav = [
   { href: "/cliente/tokens", label: "Meus Tokens", icon: "🪙" },
   { href: "/cliente/indicar", label: "Indicar Amigos", icon: "🤝" },
   { href: "/cliente/perfil", label: "Meu Perfil", icon: "👤" },
+  { href: "/cliente/colecao", label: "Minha Coleção", icon: "🃏" },
+  { href: "/cliente/scan", label: "Escanear Carta", icon: "📸" },
+  { href: "/cliente/batalha", label: "Batalha", icon: "⚔️" },
 ];
 
 export default function ClienteLayout({ children }: { children: React.ReactNode }) {

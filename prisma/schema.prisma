@@ -40,6 +40,9 @@ model Customer {
   referrals      Customer[]       @relation("Referrals")
   purchases      Purchase[]
   tokenHistory   TokenTransaction[]
+  cards          CustomerCard[]
+  battlesAs1     CardBattle[]     @relation("BattlePlayer1")
+  battlesAs2     CardBattle[]     @relation("BattlePlayer2")
 }
 
 model Store {
@@ -251,4 +254,96 @@ model StoreProduct {
   product Product @relation(fields: [productId], references: [id])
 
   @@unique([storeId, productId])
+}
+
+// ========================================
+// LIGA DAS PALETAS - Sistema de Colecionáveis
+// ========================================
+
+model Season {
+  id          String   @id @default(cuid())
+  name        String   // "Temporada 1 - Origens"
+  number      Int      @unique // 1, 2, 3...
+  totalCards  Int      @default(100)
+  active      Boolean  @default(true)
+  startDate   DateTime @default(now())
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+
+  cards       Card[]
+}
+
+model Faction {
+  id          String @id @default(cuid())
+  name        String @unique // "Frutas", "Creme", "Gelada"
+  description String?
+  color       String @default("#8B5CF6") // hex color for UI
+  icon        String @default("⚔️")
+
+  cards       Card[]
+}
+
+model Card {
+  id              String @id @default(cuid())
+  seasonId        String
+  factionId       String
+  collectionNumber Int   // #001 - #100
+  name            String // "SAMURAI DO AÇAÍ"
+  element         String // "Fruta Sombria"
+  attack          Int    @default(50)
+  defense         Int    @default(50)
+  rarity          String // comum | raro | holografico | lendario | secreto
+  description     String?
+  imageUrl        String? // URL da imagem do personagem
+  qrCode          String  @unique // código único para scan
+  tokenReward     Int     @default(1) // tokens ao escanear
+  totalPrinted    Int     @default(0) // total impresso
+  active          Boolean @default(true)
+  createdAt       DateTime @default(now())
+
+  season          Season         @relation(fields: [seasonId], references: [id])
+  faction         Faction        @relation(fields: [factionId], references: [id])
+  customerCards   CustomerCard[]
+
+  @@unique([seasonId, collectionNumber])
+}
+
+model CustomerCard {
+  id          String   @id @default(cuid())
+  customerId  String
+  cardId      String
+  scannedAt   DateTime @default(now())
+  isDuplicate Boolean  @default(false) // se já tinha essa carta
+
+  customer    Customer @relation(fields: [customerId], references: [id])
+  card        Card     @relation(fields: [cardId], references: [id])
+}
+
+model CardBattle {
+  id          String   @id @default(cuid())
+  player1Id   String
+  player2Id   String
+  winnerId    String?  // null = empate
+  player1Score Int     @default(0)
+  player2Score Int     @default(0)
+  player1Cards String  // JSON array of card IDs
+  player2Cards String  // JSON array of card IDs
+  status      String   @default("pendente") // pendente | aceito | concluido | recusado
+  createdAt   DateTime @default(now())
+
+  player1     Customer @relation("BattlePlayer1", fields: [player1Id], references: [id])
+  player2     Customer @relation("BattlePlayer2", fields: [player2Id], references: [id])
+}
+
+model GoldenStick {
+  id          String   @id @default(cuid())
+  code        String   @unique // "GOLD-001"
+  edition     String   // "Edição 1/500"
+  prize       String   // descrição do prêmio
+  prizeType   String   // caixa | freezer | dinheiro | tokens
+  prizeValue  Float    @default(0) // valor em R$ ou tokens
+  claimed     Boolean  @default(false)
+  claimedById String?  // customer que resgatou
+  claimedAt   DateTime?
+  createdAt   DateTime @default(now())
 }
