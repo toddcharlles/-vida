@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("vendedor") // admin | vendedor
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders Order[]
+}
+
+model Category {
+  id   String @id @default(cuid())
+  name String @unique // Normal, Proteico, Energetico, Isotonico
+  slug String @unique
+
+  products Product[]
+}
+
+model Product {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  price       Float
+  categoryId  String
+  active      Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  category   Category    @relation(fields: [categoryId], references: [id])
+  stock      Stock?
+  orderItems OrderItem[]
+}
+
+model Supply {
+  id        String  @id @default(cuid())
+  name      String
+  unit      String  // kg, litros, unidades
+  quantity  Float   @default(0)
+  minStock  Float   @default(0)
+  active    Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  movements SupplyMovement[]
+}
+
+model SupplyMovement {
+  id       String   @id @default(cuid())
+  supplyId String
+  type     String   // entrada | saida
+  quantity Float
+  notes    String?
+  date     DateTime @default(now())
+
+  supply Supply @relation(fields: [supplyId], references: [id])
+}
+
+model Stock {
+  id        String @id @default(cuid())
+  productId String @unique
+  quantity  Int    @default(0)
+  minStock  Int    @default(0)
+
+  updatedAt DateTime @updatedAt
+
+  product   Product         @relation(fields: [productId], references: [id])
+  movements StockMovement[]
+}
+
+model StockMovement {
+  id       String   @id @default(cuid())
+  stockId  String
+  type     String   // producao | venda | ajuste
+  quantity Int
+  notes    String?
+  date     DateTime @default(now())
+
+  stock Stock @relation(fields: [stockId], references: [id])
+}
+
+model Order {
+  id        String   @id @default(cuid())
+  userId    String
+  status    String   @default("pendente") // pendente | aprovado | separado | entregue | cancelado
+  total     Float    @default(0)
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User        @relation(fields: [userId], references: [id])
+  items OrderItem[]
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Float
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+}
