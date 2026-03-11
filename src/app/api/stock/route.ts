@@ -11,7 +11,12 @@ export async function GET() {
 
     const stock = await prisma.stock.findMany({
       include: {
-        product: { include: { category: true } },
+        product: {
+          include: {
+            category: true,
+            recipeItems: { include: { supply: true } },
+          },
+        },
       },
       orderBy: { product: { name: "asc" } },
     });

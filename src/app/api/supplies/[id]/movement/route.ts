@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
+import { recalcProductsUsingSupply } from "@/lib/production";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -35,6 +36,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         data: { quantity: newQuantity },
       }),
     ]);
+
+    // Recalculate maxProduction for all products using this supply
+    await recalcProductsUsingSupply(id);
 
     return NextResponse.json({ ok: true, newQuantity });
   } catch {
