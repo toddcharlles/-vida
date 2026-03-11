@@ -29,12 +29,14 @@ export default function ComprarPage() {
   const preSelectedStoreId = searchParams.get("storeId");
 
   const [products, setProducts] = useState<Product[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [stores, setStores] = useState<Store[]>([]);
   const [selectedStore, setSelectedStore] = useState(preSelectedStoreId || "");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [tokens, setTokens] = useState(0);
   const [useTokens, setUseTokens] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [loadingProducts, setLoadingProducts] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
@@ -45,12 +47,42 @@ export default function ComprarPage() {
       fetch("/api/stores").then((r) => r.json()),
       fetch("/api/customer/me").then((r) => r.json()),
     ]).then(([prodData, storeData, custData]) => {
+      setAllProducts(prodData.products || []);
       setProducts(prodData.products || []);
       setStores(storeData.stores || []);
       setTokens(custData.customer?.tokens || 0);
       setLoading(false);
     });
   }, []);
+
+  // Quando selecionar loja, carregar produtos especificos da loja
+  useEffect(() => {
+    if (!selectedStore) {
+      setProducts(allProducts);
+      return;
+    }
+    setLoadingProducts(true);
+    fetch(`/api/stores/products?storeId=${selectedStore}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.storeProducts && data.storeProducts.length > 0) {
+          setProducts(
+            data.storeProducts.map((sp: { price: number | null; product: Product }) => ({
+              ...sp.product,
+              price: sp.price || sp.product.price,
+            }))
+          );
+        } else {
+          // Se a loja nao tem produtos cadastrados, mostra todos
+          setProducts(allProducts);
+        }
+        setLoadingProducts(false);
+      })
+      .catch(() => {
+        setProducts(allProducts);
+        setLoadingProducts(false);
+      });
+  }, [selectedStore, allProducts]);
 
   function addToCart(product: Product) {
     setCart((prev) => {
@@ -165,7 +197,7 @@ export default function ComprarPage() {
         </label>
         <select
           value={selectedStore}
-          onChange={(e) => setSelectedStore(e.target.value)}
+          onChange={(e) => { setSelectedStore(e.target.value); setCart([]); }}
           className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
         >
           <option value="">Selecione uma loja...</option>
@@ -180,7 +212,12 @@ export default function ComprarPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Products */}
         <div className="lg:col-span-2">
-          <h2 className="font-bold text-gray-700 mb-3">Produtos</h2>
+          <h2 className="font-bold text-gray-700 mb-3">
+            Produtos {selectedStore && products.length > 0 && `(${products.length})`}
+          </h2>
+          {loadingProducts && (
+            <div className="text-center py-4 text-gray-500 text-sm">Carregando produtos da loja...</div>
+          )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {products.map((p) => (
               <div

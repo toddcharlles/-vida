@@ -56,8 +56,9 @@ model Store {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  vendor      User       @relation(fields: [vendorId], references: [id])
+  vendor      User           @relation(fields: [vendorId], references: [id])
   purchases   Purchase[]
+  products    StoreProduct[]
 }
 
 model Purchase {
@@ -146,6 +147,7 @@ model Product {
   orderItems    OrderItem[]
   recipeItems   RecipeItem[]
   purchaseItems PurchaseItem[]
+  storeProducts StoreProduct[]
 }
 
 model Supply {
@@ -233,4 +235,20 @@ model OrderItem {
 
   order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id])
+}
+
+model StoreProduct {
+  id        String  @id @default(cuid())
+  storeId   String
+  productId String
+  price     Float?  // preço customizado (null = usa preço padrão)
+  available Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store   Store   @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([storeId, productId])
 }

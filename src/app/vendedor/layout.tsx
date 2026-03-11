@@ -6,6 +6,8 @@ import Sidebar from "@/components/Sidebar";
 
 const vendedorNav = [
   { href: "/vendedor", label: "Catálogo", icon: "🍦" },
+  { href: "/vendedor/loja", label: "Minha Loja", icon: "🏪" },
+  { href: "/vendedor/produtos", label: "Meus Produtos", icon: "📦" },
   { href: "/vendedor/pedidos", label: "Meus Pedidos", icon: "📋" },
   { href: "/vendedor/comissoes", label: "Minhas Comissões", icon: "💰" },
 ];
