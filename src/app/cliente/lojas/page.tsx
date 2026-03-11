@@ -148,14 +148,15 @@ export default function LojasPage() {
               {mapUrl ? (
                 <iframe
                   width="100%"
-                  height="450"
+                  height="300"
+                  className="sm:h-[450px]"
                   style={{ border: 0 }}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   src={mapUrl}
                 />
               ) : (
-                <div className="flex items-center justify-center h-[450px] text-gray-400">
+                <div className="flex items-center justify-center h-[300px] sm:h-[450px] text-gray-400">
                   Nenhuma loja com coordenadas cadastradas
                 </div>
               )}

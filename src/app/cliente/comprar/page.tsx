@@ -209,7 +209,7 @@ export default function ComprarPage() {
         </select>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Products */}
         <div className="lg:col-span-2">
           <h2 className="font-bold text-gray-700 mb-3">

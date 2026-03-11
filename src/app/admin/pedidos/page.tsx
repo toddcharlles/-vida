@@ -52,20 +52,20 @@ export default function OrdersPage() {
           return (
             <div key={order.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
               <div
-                className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 gap-2 cursor-pointer hover:bg-gray-50"
                 onClick={() => setExpandedId(expanded ? null : order.id)}
               >
-                <div className="flex items-center gap-4">
-                  <div>
+                <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                  <div className="shrink-0">
                     <span className="text-sm font-bold text-gray-800">#{order.id.slice(-6)}</span>
                     <p className="text-xs text-gray-500">{formatDate(order.createdAt)}</p>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-700">{order.user.name}</p>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-gray-700 truncate">{order.user.name}</p>
                     <p className="text-xs text-gray-500">{order.items.length} item(ns)</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 shrink-0">
                   <span className="text-sm font-bold text-gray-800">{formatCurrency(order.total)}</span>
                   <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${statusInfo.color}`}>
                     {statusInfo.label}
@@ -74,8 +74,8 @@ export default function OrdersPage() {
               </div>
 
               {expanded && (
-                <div className="border-t border-gray-200 p-4 bg-gray-50">
-                  <table className="w-full mb-4">
+                <div className="border-t border-gray-200 p-4 bg-gray-50 overflow-x-auto">
+                  <table className="w-full mb-4 min-w-[400px]">
                     <thead>
                       <tr className="text-xs text-gray-500">
                         <th className="text-left pb-2">Produto</th>
@@ -104,7 +104,7 @@ export default function OrdersPage() {
                     </p>
                   )}
 
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {order.status === "pendente" && (
                       <>
                         <button onClick={() => updateStatus(order.id, "aprovado")} className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-blue-700 transition">

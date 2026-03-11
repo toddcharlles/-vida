@@ -186,16 +186,16 @@ export default function MeusProdutosPage() {
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
-          <table className="w-full">
+        <div className="bg-white rounded-xl shadow-sm border overflow-hidden overflow-x-auto">
+          <table className="w-full min-w-[600px]">
             <thead className="bg-gray-50">
               <tr className="text-xs text-gray-500 uppercase">
-                <th className="text-left px-6 py-3">Produto</th>
-                <th className="text-left px-6 py-3">Categoria</th>
-                <th className="text-left px-6 py-3">Preco Padrao</th>
-                <th className="text-left px-6 py-3">Seu Preco</th>
-                <th className="text-left px-6 py-3">Status</th>
-                <th className="text-left px-6 py-3">Acoes</th>
+                <th className="text-left px-4 sm:px-6 py-3">Produto</th>
+                <th className="text-left px-4 sm:px-6 py-3">Categoria</th>
+                <th className="text-left px-4 sm:px-6 py-3">Preco Padrao</th>
+                <th className="text-left px-4 sm:px-6 py-3">Seu Preco</th>
+                <th className="text-left px-4 sm:px-6 py-3">Status</th>
+                <th className="text-left px-4 sm:px-6 py-3">Acoes</th>
               </tr>
             </thead>
             <tbody>

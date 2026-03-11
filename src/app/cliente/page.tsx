@@ -28,7 +28,7 @@ export default function ClienteHome() {
         Olá, {customer.name}!
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
         <div className="bg-white rounded-xl shadow-sm border p-6">
           <div className="text-3xl mb-2">🪙</div>
           <p className="text-sm text-gray-500">Seus Tokens</p>

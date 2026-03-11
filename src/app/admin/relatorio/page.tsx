@@ -59,7 +59,7 @@ export default function ReportPage() {
   const proteinProducts = data.products.filter((p) => p.recipeItems.length > 0);
 
   return (
-    <div className="max-w-5xl">
+    <div className="max-w-5xl w-full">
       <h1 className="text-2xl font-bold text-gray-800 mb-2">MAIS VIDA ICE</h1>
       <p className="text-gray-500 text-sm mb-8">
         Relatorio de materiais comprados, custo total, estimativa de producao e sobras por sabor.
@@ -81,8 +81,8 @@ export default function ReportPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <table className="w-full">
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
+          <table className="w-full min-w-[500px]">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Item</th>
@@ -152,7 +152,7 @@ export default function ReportPage() {
               </div>
 
               <div className="p-5">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-5">
                   <div className="bg-green-50 rounded-lg p-3 text-center">
                     <p className="text-xs text-green-600 font-medium mb-1">Custo/Batelada</p>
                     <p className="text-lg font-bold text-green-700">{formatCurrency(p.costPerBatch)}</p>
@@ -182,8 +182,8 @@ export default function ReportPage() {
                 )}
 
                 <h4 className="font-semibold text-gray-700 text-sm mb-3">Receita por Batelada (10 paletas)</h4>
-                <div className="bg-gray-50 rounded-lg overflow-hidden">
-                  <table className="w-full">
+                <div className="bg-gray-50 rounded-lg overflow-hidden overflow-x-auto">
+                  <table className="w-full min-w-[300px]">
                     <thead>
                       <tr className="border-b border-gray-200">
                         <th className="text-left px-4 py-2 text-xs font-medium text-gray-500 uppercase">Ingrediente</th>
@@ -220,8 +220,8 @@ export default function ReportPage() {
       {/* 5. Leitura executiva */}
       <section className="mb-10">
         <h2 className="text-lg font-bold text-gray-800 mb-4">5. Leitura Executiva</h2>
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <table className="w-full">
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
+          <table className="w-full min-w-[500px]">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Cenario</th>

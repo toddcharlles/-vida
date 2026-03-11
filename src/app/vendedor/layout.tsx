@@ -34,9 +34,11 @@ export default function VendedorLayout({ children }: { children: React.ReactNode
   }
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar items={vendedorNav} title="Área do Vendedor" />
-      <main className="flex-1 p-8 overflow-auto">{children}</main>
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar items={vendedorNav} title="Area do Vendedor" />
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto pt-18 md:pt-4 sm:md:pt-6 lg:md:pt-8 min-w-0">
+        {children}
+      </main>
     </div>
   );
 }

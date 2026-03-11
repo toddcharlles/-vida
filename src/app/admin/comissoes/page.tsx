@@ -63,8 +63,8 @@ export default function ComissoesPage() {
       {commissions.length === 0 ? (
         <p className="text-center py-12 text-gray-500">Nenhuma comissão registrada</p>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
-          <table className="w-full text-sm">
+        <div className="bg-white rounded-xl shadow-sm border overflow-hidden overflow-x-auto">
+          <table className="w-full text-sm min-w-[700px]">
             <thead className="bg-gray-50">
               <tr>
                 <th className="text-left px-4 py-3 font-medium text-gray-600">Data</th>

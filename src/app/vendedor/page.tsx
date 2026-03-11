@@ -85,11 +85,11 @@ export default function CatalogoPage() {
   };
 
   return (
-    <div className="flex gap-6">
-      <div className="flex-1">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">Catálogo de Picolés</h1>
+    <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex-1 min-w-0">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Catalogo de Picoles</h1>
 
-        <div className="flex gap-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-6">
           {categories.map((cat) => (
             <button
               key={cat}
@@ -168,8 +168,8 @@ export default function CatalogoPage() {
         )}
       </div>
 
-      <div className="w-80 shrink-0">
-        <div className="bg-white rounded-xl border border-gray-200 p-5 sticky top-8">
+      <div className="w-full lg:w-80 shrink-0">
+        <div className="bg-white rounded-xl border border-gray-200 p-5 sticky top-4 lg:top-8">
           <h2 className="font-bold text-gray-800 mb-4">Seu Pedido</h2>
 
           {cart.length === 0 ? (

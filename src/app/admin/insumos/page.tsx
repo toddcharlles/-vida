@@ -65,7 +65,7 @@ export default function SuppliesPage() {
       {showForm && (
         <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
           <h2 className="font-semibold text-gray-800 mb-4">Novo Insumo</h2>
-          <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <form onSubmit={handleCreate} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Nome</label>
               <input
@@ -128,7 +128,7 @@ export default function SuppliesPage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500 outline-none"
               />
             </div>
-            <div className="md:col-span-4 flex gap-2">
+            <div className="sm:col-span-2 lg:col-span-4 flex gap-2">
               <button type="submit" className="bg-violet-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-violet-700 transition">
                 Criar
               </button>
@@ -195,8 +195,8 @@ export default function SuppliesPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <table className="w-full">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
+        <table className="w-full min-w-[700px]">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Insumo</th>

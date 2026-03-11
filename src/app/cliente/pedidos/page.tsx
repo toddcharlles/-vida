@@ -67,7 +67,7 @@ export default function PedidosPage() {
                 key={purchase.id}
                 className="bg-white rounded-xl shadow-sm border p-6"
               >
-                <div className="flex justify-between items-start mb-3">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
                   <div>
                     <p className="text-sm text-gray-500">
                       Pedido #{purchase.id.slice(-6)}
@@ -105,7 +105,7 @@ export default function PedidosPage() {
                   ))}
                 </div>
 
-                <div className="border-t mt-3 pt-3 flex justify-between items-center">
+                <div className="border-t mt-3 pt-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                   <div className="text-sm">
                     {purchase.tokensUsed > 0 && (
                       <span className="text-yellow-600 mr-3">

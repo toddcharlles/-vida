@@ -47,10 +47,10 @@ export default function IndicarPage() {
 
       <div className="bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl p-6 text-white mb-8">
         <h2 className="text-lg font-bold mb-2">Seu Código de Indicação</h2>
-        <div className="bg-white/20 rounded-lg px-4 py-3 text-3xl font-mono font-bold tracking-wider text-center mb-4">
+        <div className="bg-white/20 rounded-lg px-4 py-3 text-xl sm:text-3xl font-mono font-bold tracking-wider text-center mb-4 break-all">
           {data.referralCode}
         </div>
-        <div className="flex gap-3 justify-center">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={copyCode}
             className="px-4 py-2 bg-white/20 rounded-lg text-sm font-medium hover:bg-white/30 transition"

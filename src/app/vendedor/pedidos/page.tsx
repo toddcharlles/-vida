@@ -41,14 +41,12 @@ export default function MeusPedidosPage() {
           return (
             <div key={order.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
               <div
-                className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 gap-2 cursor-pointer hover:bg-gray-50"
                 onClick={() => setExpandedId(expanded ? null : order.id)}
               >
-                <div className="flex items-center gap-4">
-                  <div>
-                    <span className="text-sm font-bold text-gray-800">Pedido #{order.id.slice(-6)}</span>
-                    <p className="text-xs text-gray-500">{formatDate(order.createdAt)}</p>
-                  </div>
+                <div>
+                  <span className="text-sm font-bold text-gray-800">Pedido #{order.id.slice(-6)}</span>
+                  <p className="text-xs text-gray-500">{formatDate(order.createdAt)}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-sm font-bold text-gray-800">{formatCurrency(order.total)}</span>
@@ -59,8 +57,8 @@ export default function MeusPedidosPage() {
               </div>
 
               {expanded && (
-                <div className="border-t border-gray-200 p-4 bg-gray-50">
-                  <table className="w-full">
+                <div className="border-t border-gray-200 p-4 bg-gray-50 overflow-x-auto">
+                  <table className="w-full min-w-[350px]">
                     <thead>
                       <tr className="text-xs text-gray-500">
                         <th className="text-left pb-2">Produto</th>

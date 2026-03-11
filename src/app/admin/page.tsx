@@ -77,16 +77,16 @@ export default function AdminDashboard() {
     <div>
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
         {cards.map((card) => (
-          <div key={card.label} className="bg-white rounded-xl border border-gray-200 p-5">
-            <div className="flex items-center justify-between mb-3">
-              <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${card.color}`}>
+          <div key={card.label} className="bg-white rounded-xl border border-gray-200 p-3 sm:p-5">
+            <div className="flex items-center justify-between mb-2 sm:mb-3">
+              <span className={`text-xs font-medium px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${card.color}`}>
                 {card.label}
               </span>
-              <span className="text-2xl">{card.icon}</span>
+              <span className="text-xl sm:text-2xl">{card.icon}</span>
             </div>
-            <p className="text-2xl font-bold text-gray-800">{card.value}</p>
+            <p className="text-lg sm:text-2xl font-bold text-gray-800 truncate">{card.value}</p>
           </div>
         ))}
       </div>
