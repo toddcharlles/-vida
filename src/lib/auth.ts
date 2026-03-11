@@ -55,6 +55,50 @@ export async function requireAdmin(): Promise<AuthUser> {
   return user;
 }
 
+// Customer authentication
+export interface AuthCustomer {
+  id: string;
+  name: string;
+  email: string;
+  role: "cliente";
+}
+
+export function generateCustomerToken(customer: AuthCustomer): string {
+  return jwt.sign(
+    { id: customer.id, name: customer.name, email: customer.email, role: "cliente" },
+    JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+}
+
+export async function getCustomerSession(): Promise<AuthCustomer | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("customer_token")?.value;
+  if (!token) return null;
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as AuthCustomer;
+    if (decoded.role !== "cliente") return null;
+    return decoded;
+  } catch {
+    return null;
+  }
+}
+
+export async function requireCustomer(): Promise<AuthCustomer> {
+  const customer = await getCustomerSession();
+  if (!customer) throw new Error("Não autorizado");
+  return customer;
+}
+
+export function generateReferralCode(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  for (let i = 0; i < 8; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return code;
+}
+
 // Seed initial admin user
 export async function seedAdmin() {
   const existing = await prisma.user.findUnique({ where: { email: "admin@picole.com" } });
@@ -223,6 +267,63 @@ export async function seedAdmin() {
           },
         });
       }
+    }
+  }
+
+  // Seed vendedores e lojas
+  const vendedores = [
+    { name: "Carlos Silva", email: "carlos@picole.com", password: "vendedor123" },
+    { name: "Ana Souza", email: "ana@picole.com", password: "vendedor123" },
+  ];
+
+  for (const v of vendedores) {
+    const existing = await prisma.user.findUnique({ where: { email: v.email } });
+    if (!existing) {
+      await prisma.user.create({
+        data: {
+          name: v.name,
+          email: v.email,
+          password: await hashPassword(v.password),
+          role: "vendedor",
+        },
+      });
+    }
+  }
+
+  const stores = [
+    {
+      name: "Loja Fit Center",
+      address: "Rua Augusta, 1200",
+      city: "São Paulo",
+      state: "SP",
+      phone: "(11) 98765-4321",
+      vendorEmail: "carlos@picole.com",
+    },
+    {
+      name: "Empório Saúde",
+      address: "Av. Paulista, 500",
+      city: "São Paulo",
+      state: "SP",
+      phone: "(11) 91234-5678",
+      vendorEmail: "ana@picole.com",
+    },
+  ];
+
+  for (const s of stores) {
+    const vendor = await prisma.user.findUnique({ where: { email: s.vendorEmail } });
+    if (!vendor) continue;
+    const existingStore = await prisma.store.findUnique({ where: { vendorId: vendor.id } });
+    if (!existingStore) {
+      await prisma.store.create({
+        data: {
+          name: s.name,
+          address: s.address,
+          city: s.city,
+          state: s.state,
+          phone: s.phone,
+          vendorId: vendor.id,
+        },
+      });
     }
   }
 }

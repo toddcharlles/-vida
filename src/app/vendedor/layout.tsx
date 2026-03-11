@@ -7,6 +7,7 @@ import Sidebar from "@/components/Sidebar";
 const vendedorNav = [
   { href: "/vendedor", label: "Catálogo", icon: "🍦" },
   { href: "/vendedor/pedidos", label: "Meus Pedidos", icon: "📋" },
+  { href: "/vendedor/comissoes", label: "Minhas Comissões", icon: "💰" },
 ];
 
 export default function VendedorLayout({ children }: { children: React.ReactNode }) {

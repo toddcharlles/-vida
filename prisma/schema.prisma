@@ -17,7 +17,105 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orders Order[]
+  orders      Order[]
+  store       Store?       // loja associada ao vendedor
+  commissions Commission[] // comissões recebidas
+}
+
+model Customer {
+  id             String   @id @default(cuid())
+  name           String
+  email          String   @unique
+  password       String
+  phone          String?
+  cpf            String?  @unique
+  tokens         Float    @default(0)
+  referralCode   String   @unique // código para indicar amigos
+  referredById   String?  // quem indicou este cliente
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  referredBy     Customer?        @relation("Referrals", fields: [referredById], references: [id])
+  referrals      Customer[]       @relation("Referrals")
+  purchases      Purchase[]
+  tokenHistory   TokenTransaction[]
+}
+
+model Store {
+  id          String   @id @default(cuid())
+  name        String
+  address     String
+  city        String
+  state       String   @default("SP")
+  phone       String?
+  lat         Float?   // latitude para busca por proximidade
+  lng         Float?   // longitude
+  active      Boolean  @default(true)
+  vendorId    String   @unique // vendedor responsável pela loja
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  vendor      User       @relation(fields: [vendorId], references: [id])
+  purchases   Purchase[]
+}
+
+model Purchase {
+  id              String   @id @default(cuid())
+  customerId      String
+  storeId         String   // loja onde retira
+  status          String   @default("pendente") // pendente | pago | separado | retirado | cancelado
+  total           Float    @default(0)
+  tokensEarned    Float    @default(0) // tokens ganhos nesta compra
+  tokensUsed      Float    @default(0) // tokens usados como desconto
+  commissionRate  Float    @default(0.15) // 15% comissão para vendedor
+  commissionValue Float    @default(0)
+  paymentId       String?  // ID do pagamento no Mercado Pago
+  paymentStatus   String?  // status do pagamento MP
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  customer    Customer       @relation(fields: [customerId], references: [id])
+  store       Store          @relation(fields: [storeId], references: [id])
+  items       PurchaseItem[]
+  commission  Commission?
+}
+
+model PurchaseItem {
+  id         String @id @default(cuid())
+  purchaseId String
+  productId  String
+  quantity   Int
+  price      Float
+
+  purchase Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  product  Product  @relation(fields: [productId], references: [id])
+}
+
+model TokenTransaction {
+  id         String   @id @default(cuid())
+  customerId String
+  type       String   // compra | indicacao | resgate | bonus
+  amount     Float    // positivo = ganho, negativo = gasto
+  description String
+  purchaseId String?  // compra associada (se houver)
+  createdAt  DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id])
+}
+
+model Commission {
+  id         String   @id @default(cuid())
+  purchaseId String   @unique
+  vendorId   String
+  amount     Float
+  status     String   @default("pendente") // pendente | liberada | paga
+  paidAt     DateTime?
+  createdAt  DateTime @default(now())
+
+  purchase Purchase @relation(fields: [purchaseId], references: [id])
+  vendor   User     @relation(fields: [vendorId], references: [id])
 }
 
 model Category {
@@ -43,10 +141,11 @@ model Product {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  category    Category     @relation(fields: [categoryId], references: [id])
-  stock       Stock?
-  orderItems  OrderItem[]
-  recipeItems RecipeItem[]
+  category      Category       @relation(fields: [categoryId], references: [id])
+  stock         Stock?
+  orderItems    OrderItem[]
+  recipeItems   RecipeItem[]
+  purchaseItems PurchaseItem[]
 }
 
 model Supply {

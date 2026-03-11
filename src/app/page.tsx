@@ -105,6 +105,15 @@ export default function LoginPage() {
           <p>Email: admin@picole.com</p>
           <p>Senha: admin123</p>
         </div>
+
+        <div className="mt-4 text-center">
+          <a
+            href="/cliente/login"
+            className="text-sm text-emerald-600 hover:text-emerald-700 font-medium"
+          >
+            Sou cliente - Entrar / Cadastrar
+          </a>
+        </div>
       </div>
     </div>
   );
