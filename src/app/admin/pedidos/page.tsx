@@ -23,6 +23,8 @@ interface Order {
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [filterStatus, setFilterStatus] = useState("todos");
+  const [search, setSearch] = useState("");
 
   useEffect(() => { loadOrders(); }, []);
 
@@ -44,8 +46,26 @@ export default function OrdersPage() {
     <div>
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Pedidos</h1>
 
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+        <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Buscar vendedor..."
+          className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500 outline-none" />
+        <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}
+          className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500 outline-none">
+          <option value="todos">Todos</option>
+          <option value="pendente">Pendente</option>
+          <option value="aprovado">Aprovado</option>
+          <option value="separado">Separado</option>
+          <option value="entregue">Entregue</option>
+          <option value="cancelado">Cancelado</option>
+        </select>
+      </div>
+
       <div className="space-y-4">
-        {orders.map((order) => {
+        {orders.filter((o) => {
+          if (filterStatus !== "todos" && o.status !== filterStatus) return false;
+          if (search && !o.user.name.toLowerCase().includes(search.toLowerCase())) return false;
+          return true;
+        }).map((order) => {
           const statusInfo = ORDER_STATUS[order.status] || { label: order.status, color: "bg-gray-100 text-gray-800" };
           const expanded = expandedId === order.id;
 

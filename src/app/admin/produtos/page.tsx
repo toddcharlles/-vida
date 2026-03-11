@@ -26,6 +26,7 @@ export default function ProductsPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", description: "", price: "", categoryId: "", minStock: "10" });
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     loadData();
@@ -166,19 +167,25 @@ export default function ProductsPage() {
         </div>
       )}
 
+      {/* Search */}
+      <div className="mb-4">
+        <input type="text" placeholder="Buscar produto..." onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full sm:w-80 px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500 outline-none" />
+      </div>
+
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
         <table className="w-full min-w-[600px]">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Produto</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Categoria</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Preço</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Preco</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Estoque</th>
-              <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">Ações</th>
+              <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">Acoes</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {products.map((p) => (
+            {products.filter((p) => !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase())).map((p) => (
               <tr key={p.id} className="hover:bg-gray-50">
                 <td className="px-4 py-3">
                   <div className="font-medium text-sm text-gray-900">{p.name}</div>

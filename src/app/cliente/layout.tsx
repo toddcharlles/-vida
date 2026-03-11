@@ -11,6 +11,7 @@ const clienteNav = [
   { href: "/cliente/pedidos", label: "Meus Pedidos", icon: "📦" },
   { href: "/cliente/tokens", label: "Meus Tokens", icon: "🪙" },
   { href: "/cliente/indicar", label: "Indicar Amigos", icon: "🤝" },
+  { href: "/cliente/perfil", label: "Meu Perfil", icon: "👤" },
 ];
 
 export default function ClienteLayout({ children }: { children: React.ReactNode }) {
