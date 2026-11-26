@@ -1505,7 +1505,7 @@ await writeFile(OUTPUT, JSON.stringify({
   importedWithImages: results.length,
   note: 'Research catalog only. Images and product identity require human review; no commercial-use approval is implied.',
   products: results,
-}, null, 2) + '\\n')
+}, null, 2) + '\n')
 console.log(`Consultas: ${selected.length}; produtos únicos com imagem: ${results.length}`)
 console.log(`Arquivo: ${OUTPUT}`)
 console.log('Revise licença, atribuição, correspondência da embalagem e autorização comercial antes de publicar.')
