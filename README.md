@@ -1,37 +1,41 @@
-# Frontend — CEASA Irajá → Copacabana
+# Frontend — Mercado Online CEASA Irajá → Copacabana
 
-Primeira interface do aplicativo do cliente, com foco mobile e identidade premium sem marca comercial definida.
+Protótipo mobile-first em React, TypeScript e Vite. A identidade visual premium iniciada na versão 0.1.0 será preservada e evoluída para um supermercado completo.
+
+## Escopo definido
+- Supermercado completo, incluindo hortifrúti, açougue e proteínas, laticínios, mercearia, padaria, bebidas, congelados, limpeza, higiene, pet shop e utilidades.
+- Catálogo escalável, preparado para milhares de produtos e carregamento paginado.
+- Um pedido principal pode conter várias entregas independentes.
+- Interface mobile-first e marca comercial ainda em definição.
+
+## Estado atual do código
+A branch main contém o protótipo inicial: home de hortifrúti, busca local, filtro simples, carrinho local e perfil demonstrativo. Ainda não há backend, autenticação real, checkout, pagamento, integração com fornecedores ou acompanhamento de entregas.
+
+A branch de trabalho feat/mercado-completo-foundation contém a documentação arquitetural revisada. A documentação descreve o estado atual e o que ainda precisa ser implementado; não significa que as funcionalidades futuras já estejam codificadas.
+
+## Documentação
+- [Arquitetura do frontend](docs/FRONTEND_ARCHITECTURE.md)
+- [Catálogo e carrinho](docs/CATALOG_AND_CART.md)
+- [Pedidos com múltiplas entregas](docs/MULTIPLE_DELIVERIES.md)
+- [Roadmap e critérios de aceite](docs/FRONTEND_ROADMAP.md)
 
 ## Requisitos
 - Node.js 20 ou superior
 - npm
 
-## Executar
+## Executar localmente
 ```bash
 npm install
 npm run dev
 ```
-Abra o endereço local mostrado pelo Vite (normalmente http://localhost:5173).
 
 ## Validar build
 ```bash
 npm run build
 ```
 
-## O que já funciona
-- Navegação inferior entre Início, Categorias, Carrinho e Perfil
-- Busca por nome de produto
-- Filtro por categoria
-- Adição e remoção de itens
-- Quantidade por produto e subtotal estimado
-- Aviso de confirmação ao adicionar ao carrinho
-- Layout responsivo com prioridade para celular
-
 ## Dados demonstrativos
-Produtos, preços, imagens, ofertas e textos são ilustrativos. Não representam cotação confirmada do CEASA nem disponibilidade real. Não há backend, autenticação, checkout ou integração de pagamento nesta etapa.
+Produtos, preços, imagens e ofertas locais são exemplos para desenvolvimento. Não representam cotação confirmada do CEASA, estoque ou disponibilidade real. Não utilizar para venda sem integração e validação operacional.
 
-## Próximas etapas sugeridas
-1. Validar identidade visual e catálogo inicial.
-2. Definir regras de itens pesáveis, tolerância de peso e substituições.
-3. Implementar fluxo de endereço e janela de entrega.
-4. Conectar catálogo e carrinho à API quando o contrato estiver definido.
+## Próxima etapa
+Implementar a fundação 0.2.0: estrutura por funcionalidades, home multidepartamental, catálogo tipado, busca global e carrinho preparado para múltiplas entregas.
