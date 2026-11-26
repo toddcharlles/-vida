@@ -1,6 +1,9 @@
-# Frontend — CEASA Irajá → Copacabana
+# Frontend — Mercado Online CEASA Irajá → Copacabana
 
-Primeira interface do aplicativo do cliente, com foco mobile e identidade premium sem marca comercial definida.
+Frontend mobile-first para um supermercado online completo, com abastecimento inicial planejado a partir de fornecedores do CEASA de Irajá e atendimento inicial em Copacabana, Rio de Janeiro.
+
+**Versão de trabalho:** 0.2.0  
+**Branch de evolução:** `feat/market-foundation-v0.2.0`
 
 ## Requisitos
 - Node.js 20 ou superior
@@ -11,6 +14,7 @@ Primeira interface do aplicativo do cliente, com foco mobile e identidade premiu
 npm install
 npm run dev
 ```
+
 Abra o endereço local mostrado pelo Vite (normalmente http://localhost:5173).
 
 ## Validar build
@@ -18,20 +22,39 @@ Abra o endereço local mostrado pelo Vite (normalmente http://localhost:5173).
 npm run build
 ```
 
-## O que já funciona
-- Navegação inferior entre Início, Categorias, Carrinho e Perfil
-- Busca por nome de produto
-- Filtro por categoria
-- Adição e remoção de itens
-- Quantidade por produto e subtotal estimado
-- Aviso de confirmação ao adicionar ao carrinho
-- Layout responsivo com prioridade para celular
+## Escopo de produto definido
+- Supermercado completo: hortifrúti, açougue/proteínas, laticínios, mercearia, padaria, bebidas, congelados, limpeza, higiene, pet shop e utilidades.
+- Catálogo escalável, com departamentos e categorias dirigidos por dados.
+- Um carrinho e pedido principal com suporte conceitual a múltiplos agrupamentos e entregas.
+- Interface premium e mobile-first.
+- Marca comercial ainda não definida.
 
-## Dados demonstrativos
-Produtos, preços, imagens, ofertas e textos são ilustrativos. Não representam cotação confirmada do CEASA nem disponibilidade real. Não há backend, autenticação, checkout ou integração de pagamento nesta etapa.
+## O que existe nesta branch
+- Home ampliada para mercado multidepartamental.
+- Navegação por departamentos.
+- Busca local por nome e categoria.
+- Produtos demonstrativos de diferentes departamentos.
+- Carrinho local com quantidades e subtotal estimado.
+- Prévia demonstrativa de agrupamentos operacionais no carrinho.
+- Documentação de arquitetura, catálogo e múltiplas entregas em `docs/`.
 
-## Próximas etapas sugeridas
-1. Validar identidade visual e catálogo inicial.
-2. Definir regras de itens pesáveis, tolerância de peso e substituições.
-3. Implementar fluxo de endereço e janela de entrega.
-4. Conectar catálogo e carrinho à API quando o contrato estiver definido.
+## Dados demonstrativos e limites
+Produtos, preços, imagens, ofertas e textos são ilustrativos. Não representam cotação confirmada do CEASA, disponibilidade real ou estoque. O carrinho e os agrupamentos ainda são locais e demonstrativos. Não há backend, autenticação, checkout real, cálculo de frete, confirmação de entregas, pagamento ou integração com fornecedores nesta etapa.
+
+A divisão apresentada no carrinho é uma prévia por grupo operacional de origem, não uma promessa de que cada grupo será uma entrega separada. A operação poderá consolidar grupos em uma mesma entrega.
+
+## Documentação
+- [Arquitetura do frontend](docs/FRONTEND_ARCHITECTURE.md)
+- [Modelo de catálogo escalável](docs/CATALOG_MODEL.md)
+- [Carrinho e múltiplas entregas](docs/MULTI_DELIVERY.md)
+
+## Próximas etapas
+1. Validar visualmente a home e os departamentos em celular.
+2. Corrigir/validar as imagens demonstrativas e definir política de assets.
+3. Formalizar as regras de peso, substituição, disponibilidade e preço.
+4. Implementar checkout e contratos da API.
+5. Integrar pedidos, fulfillments, entregas e pagamentos com backend.
+6. Adicionar testes automatizados e pipeline CI.
+
+## Build
+Execute `npm run build` antes de publicar. A alteração nesta branch ainda precisa ser instalada e validada localmente; não declare o build aprovado até executar o comando.
