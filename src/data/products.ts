@@ -1,30 +1,22 @@
-export type Product = {
-  id: number
-  name: string
-  category: string
-  unit: string
-  price: number
-  oldPrice?: number
-  tag?: string
-  image: string
-  description: string
-}
+import type { Product } from '../types/catalog'
 
-export const categories = [
-  { name: 'Todos', icon: '✳' },
-  { name: 'Frutas', icon: '🍊' },
-  { name: 'Legumes', icon: '🥕' },
-  { name: 'Verduras', icon: '🥬' },
-  { name: 'Temperos', icon: '🌿' },
-]
-
+// Produtos e preços fictícios para prototipação. Não representam cotação nem estoque real.
 export const products: Product[] = [
-  { id: 1, name: 'Banana prata', category: 'Frutas', unit: 'kg', price: 5.99, oldPrice: 7.49, tag: 'Oferta do dia', image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=700&auto=format&fit=crop&q=85', description: 'Selecionada, no ponto ideal para consumir.' },
-  { id: 2, name: 'Tomate italiano', category: 'Legumes', unit: 'kg', price: 6.49, oldPrice: 8.99, tag: 'Mais pedido', image: 'https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=700&auto=format&fit=crop&q=85', description: 'Firme, suculento e ótimo para saladas e molhos.' },
-  { id: 3, name: 'Abacate', category: 'Frutas', unit: 'unidade', price: 4.5, image: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=700&auto=format&fit=crop&q=85', description: 'Fruta fresca, selecionada uma a uma.' },
-  { id: 4, name: 'Alface crespa', category: 'Verduras', unit: 'unidade', price: 3.99, image: 'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=700&auto=format&fit=crop&q=85', description: 'Folhas frescas e crocantes.' },
-  { id: 5, name: 'Cenoura', category: 'Legumes', unit: 'kg', price: 4.99, image: 'https://images.unsplash.com/photo-1445282768818-728615cc910a?w=700&auto=format&fit=crop&q=85', description: 'Boa textura e cor intensa.' },
-  { id: 6, name: 'Limão tahiti', category: 'Frutas', unit: 'kg', price: 3.79, image: 'https://images.unsplash.com/photo-1513558161293-c daf?auto=format&fit=crop&q=85', description: 'Fresquinho para sucos e receitas.' },
-  { id: 7, name: 'Cebolinha', category: 'Temperos', unit: 'maço', price: 2.99, image: 'https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?w=700&auto=format&fit=crop&q=85', description: 'Aroma fresco para finalizar seus pratos.' },
-  { id: 8, name: 'Batata inglesa', category: 'Legumes', unit: 'kg', price: 5.49, image: 'https://images.unsplash.com/photo-1518977676601-b53f82ber?auto=format&fit=crop&q=85', description: 'Versátil para o dia a dia.' },
+  { id: 'p1', slug: 'banana-prata', name: 'Banana prata', departmentId: 'produce', category: 'Frutas', unit: 'KG', price: 5.99, previousPrice: 7.49, badge: 'Oferta', image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=700&auto=format&fit=crop&q=85', description: 'Selecionada, no ponto ideal para consumir.', isWeighed: true, active: true, supplierGroup: 'ceasa-produce' },
+  { id: 'p2', slug: 'tomate-italiano', name: 'Tomate italiano', departmentId: 'produce', category: 'Legumes', unit: 'KG', price: 6.49, image: 'https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=700&auto=format&fit=crop&q=85', description: 'Firme e suculento para saladas e molhos.', isWeighed: true, active: true, supplierGroup: 'ceasa-produce' },
+  { id: 'p3', slug: 'alface-crespa', name: 'Alface crespa', departmentId: 'produce', category: 'Verduras', unit: 'UNIT', price: 3.99, image: 'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=700&auto=format&fit=crop&q=85', description: 'Folhas frescas e crocantes.', isWeighed: false, active: true, supplierGroup: 'ceasa-produce' },
+  { id: 'p4', slug: 'batata-inglesa', name: 'Batata inglesa', departmentId: 'produce', category: 'Legumes', unit: 'KG', price: 5.49, image: 'https://images.unsplash.com/photo-1518977676601-b53f82ber?auto=format&fit=crop&q=85', description: 'Versátil para o dia a dia.', isWeighed: true, active: true, supplierGroup: 'ceasa-produce' },
+  { id: 'p5', slug: 'peito-de-frango', name: 'Peito de frango', departmentId: 'meat', category: 'Aves', unit: 'KG', price: 18.9, image: 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=700&auto=format&fit=crop&q=85', description: 'Corte resfriado, embalagem demonstrativa.', isWeighed: true, active: true, supplierGroup: 'proteinas', requiresRefrigeration: true },
+  { id: 'p6', slug: 'ovos-brancos', name: 'Ovos brancos', departmentId: 'meat', category: 'Ovos', unit: 'PACKAGE', price: 14.9, image: 'https://images.unsplash.com/photo-1506976785307-8732e854ad03?w=700&auto=format&fit=crop&q=85', description: 'Bandeja com 20 unidades.', isWeighed: false, active: true, supplierGroup: 'proteinas' },
+  { id: 'p7', slug: 'leite-integral', name: 'Leite integral', departmentId: 'dairy', category: 'Leites', unit: 'L', price: 5.49, image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=700&auto=format&fit=crop&q=85', description: 'Embalagem de 1 litro.', isWeighed: false, active: true, supplierGroup: 'refrigerados', requiresRefrigeration: true },
+  { id: 'p8', slug: 'queijo-mucarela', name: 'Queijo muçarela', departmentId: 'dairy', category: 'Queijos', unit: 'KG', price: 39.9, image: 'https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=700&auto=format&fit=crop&q=85', description: 'Preço demonstrativo por quilo.', isWeighed: true, active: true, supplierGroup: 'refrigerados', requiresRefrigeration: true },
+  { id: 'p9', slug: 'arroz-tipo-1', name: 'Arroz tipo 1', departmentId: 'grocery', category: 'Grãos', unit: 'PACKAGE', price: 6.99, image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=700&auto=format&fit=crop&q=85', description: 'Pacote de 1 kg.', isWeighed: false, active: true, supplierGroup: 'mercearia' },
+  { id: 'p10', slug: 'macarrao-espaguete', name: 'Macarrão espaguete', departmentId: 'grocery', category: 'Massas', unit: 'PACKAGE', price: 4.29, image: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=700&auto=format&fit=crop&q=85', description: 'Pacote de 500 g.', isWeighed: false, active: true, supplierGroup: 'mercearia' },
+  { id: 'p11', slug: 'pao-artesanal', name: 'Pão artesanal', departmentId: 'bakery', category: 'Pães', unit: 'UNIT', price: 9.9, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=700&auto=format&fit=crop&q=85', description: 'Imagem e preço ilustrativos.', isWeighed: false, active: true, supplierGroup: 'padaria' },
+  { id: 'p12', slug: 'suco-laranja', name: 'Suco de laranja', departmentId: 'drinks', category: 'Sucos', unit: 'L', price: 8.5, image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=700&auto=format&fit=crop&q=85', description: 'Embalagem de 1 litro.', isWeighed: false, active: true, supplierGroup: 'bebidas' },
+  { id: 'p13', slug: 'polpa-frutas-congelada', name: 'Polpa de frutas', departmentId: 'frozen', category: 'Polpas', unit: 'PACKAGE', price: 7.9, image: 'https://images.unsplash.com/photo- frozen-foods?w=700&auto=format&fit=crop&q=85', description: 'Produto congelado demonstrativo.', isWeighed: false, active: true, supplierGroup: 'congelados', requiresRefrigeration: true },
+  { id: 'p14', slug: 'detergente-neutro', name: 'Detergente neutro', departmentId: 'cleaning', category: 'Limpeza', unit: 'UNIT', price: 2.79, image: 'https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=700&auto=format&fit=crop&q=85', description: 'Embalagem demonstrativa.', isWeighed: false, active: true, supplierGroup: 'limpeza' },
+  { id: 'p15', slug: 'shampoo-suave', name: 'Shampoo suave', departmentId: 'personal-care', category: 'Cabelos', unit: 'UNIT', price: 12.9, image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=700&auto=format&fit=crop&q=85', description: 'Produto ilustrativo.', isWeighed: false, active: true, supplierGroup: 'higiene' },
+  { id: 'p16', slug: 'racao-caes', name: 'Ração para cães', departmentId: 'pet', category: 'Rações', unit: 'PACKAGE', price: 49.9, image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc9?auto=format&fit=crop&q=85', description: 'Pacote demonstrativo.', isWeighed: false, active: true, supplierGroup: 'pet' },
+  { id: 'p17', slug: 'pote-organizador', name: 'Pote organizador', departmentId: 'utilities', category: 'Organização', unit: 'UNIT', price: 15.9, image: 'https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=700&auto=format&fit=crop&q=85', description: 'Utensílio doméstico ilustrativo.', isWeighed: false, active: true, supplierGroup: 'utilidades' },
 ]
