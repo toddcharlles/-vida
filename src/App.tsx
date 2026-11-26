@@ -1,24 +1,43 @@
 import { useMemo, useState } from 'react'
-import { Search, ShoppingBag, MapPin, ChevronRight, Plus, Minus, Leaf, Home, LayoutGrid, UserRound, ArrowRight, X, Check } from 'lucide-react'
-import { categories, products, type Product } from './data/products'
+import { Search, ShoppingBag, MapPin, ChevronRight, Plus, Minus, Home, LayoutGrid, UserRound, ArrowRight, X, Check, Truck, Package } from 'lucide-react'
+import { departments } from './data/departments'
+import { products } from './data/products'
+import type { Product } from './types/catalog'
 
-type Cart = Record<number, number>
+type Cart = Record<string, number>
 type Tab = 'Início' | 'Categorias' | 'Carrinho' | 'Perfil'
 const money = (value: number) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+const unitLabel: Record<Product['unit'], string> = { KG: 'kg', G: 'g', L: 'litro', ML: 'ml', UNIT: 'unidade', PACKAGE: 'pacote', BOX: 'caixa', BUNCH: 'maço' }
 
 export default function App() {
-  const [activeCategory, setActiveCategory] = useState('Todos')
+  const [activeDepartment, setActiveDepartment] = useState('all')
   const [search, setSearch] = useState('')
   const [cart, setCart] = useState<Cart>({})
   const [tab, setTab] = useState<Tab>('Início')
   const [notice, setNotice] = useState('')
 
-  const cartCount = Object.values(cart).reduce((sum, n) => sum + n, 0)
-  const cartTotal = products.reduce((sum, p) => sum + p.price * (cart[p.id] || 0), 0)
-  const filtered = useMemo(() => products.filter(p =>
-    (activeCategory === 'Todos' || p.category === activeCategory) &&
-    p.name.toLocaleLowerCase('pt-BR').includes(search.toLocaleLowerCase('pt-BR'))
-  ), [activeCategory, search])
+  const activeProducts = products.filter(product => product.active)
+  const cartCount = Object.values(cart).reduce((sum, quantity) => sum + quantity, 0)
+  const cartTotal = activeProducts.reduce((sum, product) => sum + product.price * (cart[product.id] || 0), 0)
+  const filtered = useMemo(() => activeProducts.filter(product =>
+    (activeDepartment === 'all' || product.departmentId === activeDepartment) &&
+    (product.name.toLocaleLowerCase('pt-BR').includes(search.toLocaleLowerCase('pt-BR')) ||
+      product.category.toLocaleLowerCase('pt-BR').includes(search.toLocaleLowerCase('pt-BR')))
+  ), [activeDepartment, search])
+
+  const deliveryGroups = useMemo(() => {
+    const grouped = new Map<string, Product[]>()
+    activeProducts.filter(product => cart[product.id]).forEach(product => {
+      const current = grouped.get(product.supplierGroup) || []
+      grouped.set(product.supplierGroup, [...current, product])
+    })
+    return Array.from(grouped.entries()).map(([key, items]) => ({
+      id: key,
+      title: items.length > 1 ? items[0].category === 'Frutas' ? 'Hortifrúti e frescos' : items[0].supplierGroup : items[0].category,
+      items,
+      total: items.reduce((sum, item) => sum + item.price * (cart[item.id] || 0), 0),
+    }))
+  }, [cart, activeProducts])
 
   function updateCart(product: Product, delta: number) {
     setCart(current => {
@@ -32,13 +51,16 @@ export default function App() {
     }
   }
 
-  const goToCategory = (name: string) => { setActiveCategory(name); setTab('Categorias') }
+  const selectDepartment = (id: string) => {
+    setActiveDepartment(id)
+    setTab('Categorias')
+  }
 
   return (
     <div className="app-shell">
       <header className="topbar">
-        <div className="brand-mark"><Leaf size={19} strokeWidth={2.2} /></div>
-        <div className="brand-copy"><span>FRESCO TODO DIA</span><strong>Hortifruti selecionado</strong></div>
+        <div className="brand-mark"><ShoppingBag size={19} strokeWidth={2.2} /></div>
+        <div className="brand-copy"><span>MERCADO COMPLETO</span><strong>Seu mercado, mais perto.</strong></div>
         <button className="icon-button cart-top" aria-label="Abrir carrinho" onClick={() => setTab('Carrinho')}>
           <ShoppingBag size={21} /><i>{cartCount}</i>
         </button>
@@ -54,48 +76,59 @@ export default function App() {
 
           <section className="hero">
             <div className="hero-content">
-              <span className="eyebrow">DA FEIRA PARA SUA CASA</span>
-              <h1>Frescor que<br /><em>faz bem.</em></h1>
-              <p>Frutas, legumes e verduras selecionados para deixar sua rotina mais leve.</p>
-              <button className="hero-cta" onClick={() => document.getElementById('catalogo')?.scrollIntoView({ behavior: 'smooth' })}>Explorar produtos <ArrowRight size={16} /></button>
+              <span className="eyebrow">SEU MERCADO EM UM SÓ LUGAR</span>
+              <h1>Do essencial<br /><em>ao especial.</em></h1>
+              <p>Alimentos, frescos, limpeza, cuidados e muito mais para sua casa.</p>
+              <button className="hero-cta" onClick={() => document.getElementById('catalogo')?.scrollIntoView({ behavior: 'smooth' })}>Explorar mercado <ArrowRight size={16} /></button>
             </div>
-            <div className="hero-image" role="img" aria-label="Seleção de frutas e vegetais frescos" />
-            <div className="hero-stamp"><span>SELEÇÃO</span><strong>FRESCA</strong><small>todos os dias</small></div>
+            <div className="hero-image" role="img" aria-label="Seleção de produtos de supermercado" />
+            <div className="hero-stamp"><span>SEU</span><strong>MERCADO</strong><small>mais perto</small></div>
           </section>
 
           <section className="trust-row">
-            <div><span className="trust-icon">✳</span><p><strong>Seleção cuidadosa</strong><small>Qualidade em cada pedido</small></p></div>
-            <div><span className="trust-icon">⌁</span><p><strong>Entrega programada</strong><small>Na sua melhor janela</small></p></div>
+            <div><span className="trust-icon">✳</span><p><strong>Compra em um só lugar</strong><small>Diversos setores e categorias</small></p></div>
+            <div><span className="trust-icon"><Truck size={16} /></span><p><strong>Entregas organizadas</strong><small>Acompanhe cada entrega</small></p></div>
           </section>
 
           <section className="section-block">
-            <div className="section-heading"><div><span className="eyebrow">ESCOLHA POR TIPO</span><h2>O que você procura?</h2></div><button className="text-link" onClick={() => setTab('Categorias')}>Ver tudo <ChevronRight size={15} /></button></div>
-            <div className="category-strip">
-              {categories.slice(1).map(c => <button key={c.name} className={`category-tile ${activeCategory === c.name ? 'selected' : ''}`} onClick={() => goToCategory(c.name)}><span>{c.icon}</span><strong>{c.name}</strong></button>)}
+            <div className="section-heading"><div><span className="eyebrow">NAVEGUE PELO MERCADO</span><h2>Todos os departamentos</h2></div><button className="text-link" onClick={() => { setActiveDepartment('all'); setTab('Categorias') }}>Ver tudo <ChevronRight size={15} /></button></div>
+            <div className="department-grid">
+              {departments.filter(department => department.active).map(department => (
+                <button key={department.id} className={`category-tile ${activeDepartment === department.id ? 'selected' : ''}`} onClick={() => selectDepartment(department.id)}>
+                  <span>{department.icon}</span><strong>{department.name}</strong>
+                </button>
+              ))}
             </div>
           </section>
 
           <section className="section-block catalog" id="catalogo">
-            <div className="section-heading"><div><span className="eyebrow">{activeCategory === 'Todos' ? 'FRESQUINHOS PARA VOCÊ' : 'CATEGORIA'}</span><h2>{activeCategory === 'Todos' ? 'Destaques da semana' : activeCategory}</h2></div><span className="item-count">{filtered.length} itens</span></div>
-            <label className="search-box"><Search size={18} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar frutas, legumes..." /><kbd>⌕</kbd></label>
+            <div className="section-heading"><div><span className="eyebrow">{activeDepartment === 'all' ? 'SELEÇÃO PARA SUA CASA' : 'DEPARTAMENTO'}</span><h2>{activeDepartment === 'all' ? 'Produtos em destaque' : departments.find(item => item.id === activeDepartment)?.name}</h2></div><span className="item-count">{filtered.length} itens</span></div>
+            <label className="search-box"><Search size={18} /><input value={search} onChange={event => setSearch(event.target.value)} placeholder="Buscar em todo o mercado..." /><kbd>⌕</kbd></label>
             <div className="filter-pills">
-              {categories.map(c => <button key={c.name} className={activeCategory === c.name ? 'active' : ''} onClick={() => setActiveCategory(c.name)}>{c.name}</button>)}
+              <button className={activeDepartment === 'all' ? 'active' : ''} onClick={() => setActiveDepartment('all')}>Todos</button>
+              {departments.map(department => <button key={department.id} className={activeDepartment === department.id ? 'active' : ''} onClick={() => setActiveDepartment(department.id)}>{department.name}</button>)}
             </div>
             {filtered.length ? <div className="product-grid">
-              {filtered.map(p => <article className="product-card" key={p.id}>
-                <div className="product-photo"><img src={p.image} alt={p.name} loading="lazy" />{p.tag && <span className="product-tag">{p.tag}</span>}
-                  {cart[p.id] ? <div className="quantity-control"><button aria-label="Diminuir quantidade" onClick={() => updateCart(p, -1)}><Minus size={14} /></button><b>{cart[p.id]}</b><button aria-label="Aumentar quantidade" onClick={() => updateCart(p, 1)}><Plus size={14} /></button></div> : <button className="add-button" aria-label={`Adicionar ${p.name}`} onClick={() => updateCart(p, 1)}><Plus size={18} /></button>}
+              {filtered.map(product => <article className="product-card" key={product.id}>
+                <div className="product-photo"><img src={product.image} alt={product.name} loading="lazy" />{product.badge && <span className="product-tag">{product.badge}</span>}
+                  {cart[product.id] ? <div className="quantity-control"><button aria-label={`Diminuir ${product.name}`} onClick={() => updateCart(product, -1)}><Minus size={14} /></button><b>{cart[product.id]}</b><button aria-label={`Aumentar ${product.name}`} onClick={() => updateCart(product, 1)}><Plus size={14} /></button></div> : <button className="add-button" aria-label={`Adicionar ${product.name}`} onClick={() => updateCart(product, 1)}><Plus size={18} /></button>}
                 </div>
-                <div className="product-info"><small>{p.category.toUpperCase()}</small><h3>{p.name}</h3><p>{p.description}</p><div className="price-line"><strong>{money(p.price)}</strong><span> / {p.unit}</span></div>{p.oldPrice && <del>{money(p.oldPrice)}</del>}</div>
+                <div className="product-info"><small>{departments.find(item => item.id === product.departmentId)?.name.toUpperCase()}</small><h3>{product.name}</h3><p>{product.description}</p><div className="price-line"><strong>{money(product.price)}</strong><span> / {unitLabel[product.unit]}</span></div>{product.previousPrice && <del>{money(product.previousPrice)}</del>}{product.isWeighed && <small className="weighed-note">Preço estimado por peso</small>}</div>
               </article>)}
-            </div> : <div className="empty-state">Não encontramos produtos com esse nome.</div>}
+            </div> : <div className="empty-state">Não encontramos produtos com esses filtros.</div>}
           </section>
         </> : null}
 
         {tab === 'Carrinho' && <section className="page-section"><span className="eyebrow">SEU PEDIDO</span><h1 className="page-title">Carrinho</h1>
-          {cartCount === 0 ? <div className="empty-cart"><div className="empty-icon"><ShoppingBag size={30} /></div><h2>Seu carrinho está vazio</h2><p>Explore os produtos fresquinhos e monte seu pedido.</p><button className="primary-button" onClick={() => setTab('Início')}>Ver produtos <ArrowRight size={16} /></button></div> :
-          <><div className="cart-list">{products.filter(p => cart[p.id]).map(p => <div className="cart-row" key={p.id}><img src={p.image} alt="" /><div className="cart-description"><strong>{p.name}</strong><small>{money(p.price)} / {p.unit}</small><div className="quantity-control inline"><button onClick={() => updateCart(p, -1)}><Minus size={13} /></button><b>{cart[p.id]}</b><button onClick={() => updateCart(p, 1)}><Plus size={13} /></button></div></div><strong className="line-total">{money(p.price * cart[p.id])}</strong></div>)}</div>
-          <div className="cart-summary"><div><span>Subtotal estimado</span><strong>{money(cartTotal)}</strong></div><small>O valor final de itens vendidos por peso pode variar após a pesagem.</small><button className="primary-button full" onClick={() => setNotice('Checkout será conectado na próxima etapa.')}>Continuar <ArrowRight size={16} /></button></div></>}
+          {cartCount === 0 ? <div className="empty-cart"><div className="empty-icon"><ShoppingBag size={30} /></div><h2>Seu carrinho está vazio</h2><p>Explore os departamentos e monte sua compra.</p><button className="primary-button" onClick={() => setTab('Início')}>Ver mercado <ArrowRight size={16} /></button></div> :
+          <>
+            <div className="cart-list">{activeProducts.filter(product => cart[product.id]).map(product => <div className="cart-row" key={product.id}><img src={product.image} alt="" /><div className="cart-description"><strong>{product.name}</strong><small>{money(product.price)} / {unitLabel[product.unit]}</small><div className="quantity-control inline"><button aria-label={`Diminuir ${product.name}`} onClick={() => updateCart(product, -1)}><Minus size={13} /></button><b>{cart[product.id]}</b><button aria-label={`Aumentar ${product.name}`} onClick={() => updateCart(product, 1)}><Plus size={13} /></button></div></div><strong className="line-total">{money(product.price * cart[product.id])}</strong></div>)}</div>
+            <section className="delivery-preview"><div className="section-heading"><div><span className="eyebrow">LOGÍSTICA DO PEDIDO</span><h2>Grupos de separação</h2></div><Package size={19} /></div><p>Seu pedido poderá ser organizado em mais de uma entrega. A divisão e os fretes serão confirmados no checkout.</p>
+              {deliveryGroups.map(group => <div className="delivery-group" key={group.id}><div><strong>{group.title}</strong><small>{group.items.map(item => item.name).join(', ')}</small></div><b>{money(group.total)}</b></div>)}
+              <small className="demo-note">Agrupamentos demonstrativos por origem operacional; não representam entregas confirmadas.</small>
+            </section>
+            <div className="cart-summary"><div><span>Subtotal estimado</span><strong>{money(cartTotal)}</strong></div><small>Frete ainda não calculado. O valor final dos itens pesáveis pode variar após a pesagem e validação.</small><button className="primary-button full" onClick={() => setNotice('Checkout será conectado à API na próxima etapa.')}>Continuar <ArrowRight size={16} /></button></div>
+          </>}
         </section>}
 
         {tab === 'Perfil' && <section className="page-section"><span className="eyebrow">SUA CONTA</span><h1 className="page-title">Bem-vindo(a)</h1><div className="profile-card"><div className="profile-avatar"><UserRound /></div><h2>Área do cliente</h2><p>Em breve você poderá acessar seus dados, endereços e histórico de pedidos por aqui.</p><button className="primary-button" onClick={() => setNotice('Cadastro será implementado na próxima etapa.')}>Criar minha conta</button></div></section>}
@@ -105,7 +138,7 @@ export default function App() {
 
       <nav className="bottom-nav">
         <button className={tab === 'Início' ? 'current' : ''} onClick={() => setTab('Início')}><Home size={20} /><span>Início</span></button>
-        <button className={tab === 'Categorias' ? 'current' : ''} onClick={() => setTab('Categorias')}><LayoutGrid size={20} /><span>Categorias</span></button>
+        <button className={tab === 'Categorias' ? 'current' : ''} onClick={() => { setActiveDepartment('all'); setTab('Categorias') }}><LayoutGrid size={20} /><span>Departamentos</span></button>
         <button onClick={() => setTab('Carrinho')} className={`nav-cart ${tab === 'Carrinho' ? 'current' : ''}`}><span className="nav-cart-icon"><ShoppingBag size={20} />{cartCount > 0 && <i>{cartCount}</i>}</span><span>Carrinho</span></button>
         <button className={tab === 'Perfil' ? 'current' : ''} onClick={() => setTab('Perfil')}><UserRound size={20} /><span>Perfil</span></button>
       </nav>
