@@ -12,7 +12,7 @@ const OrderItem = sequelize.define('OrderItem', {
     allowNull: false,
   },
   productId: {
-    type: DataTypes.UUID,
+    type: DataTypes.STRING,
     allowNull: false,
   },
   // Snapshot do produto no momento da compra
@@ -71,7 +71,7 @@ const OrderItem = sequelize.define('OrderItem', {
   },
   // Categoria para profiling
   categoryId: {
-    type: DataTypes.UUID,
+    type: DataTypes.STRING,
     allowNull: true,
   },
   categoryName: {

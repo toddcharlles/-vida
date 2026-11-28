@@ -9,7 +9,7 @@ async function startServer() {
     await sequelize.authenticate();
     console.log('✅ Conectado ao SQLite');
 
-    // Sincronizar modelos (force: true para produção - adiciona colunas sem perder dados)
+    // Sincronizar modelos (force: true para desenvolvimento - recria tabelas)
     await sequelize.sync({ force: true });
     console.log('✅ Tabelas recriadas');
 
@@ -49,7 +49,7 @@ async function startServer() {
     // Iniciar servidor
     app.listen(PORT, () => {
       console.log(`
-╔══════════════════════════════════════════════════════════╗
+╔═══════════════════════════════════════════════════════════╗
 ║  🛒  CEASA COPACABANA API                                 ║
 ║  📡  Servidor rodando em http://localhost:${PORT}              ║
 ║  🏥  Health: http://localhost:${PORT}/api/health               ║
@@ -59,7 +59,7 @@ async function startServer() {
 ║  🎁  Promoções: http://localhost:${PORT}/api/promotions           ║
 ║  📱  WhatsApp OCR: http://localhost:${PORT}/api/whatsapp/status  ║
 ║  🔧  Debug: http://localhost:${PORT}/api/debug/products          ║
-╚══════════════════════════════════════════════════════════╝
+╚═══════════════════════════════════════════════════════════╝
       `);
     });
   } catch (error) {
