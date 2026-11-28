@@ -34,6 +34,7 @@ export type Product = {
   active: boolean
   supplierGroup: string
   requiresRefrigeration?: boolean
+  barcode?: string
 }
 
 export type CartLine = {
